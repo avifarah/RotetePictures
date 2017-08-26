@@ -1,4 +1,6 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
+
 
 namespace RotatePictures
 {
@@ -9,6 +11,8 @@ namespace RotatePictures
 	{
 		public App()
 		{
+			const int duration = 60 * 1000;
+			ToolTipService.ShowDurationProperty.OverrideMetadata(typeof(DependencyObject), new FrameworkPropertyMetadata(duration));
 		}
 	}
 }

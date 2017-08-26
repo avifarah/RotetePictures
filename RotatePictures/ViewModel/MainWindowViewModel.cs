@@ -161,8 +161,8 @@ namespace RotatePictures.ViewModel
 		private void LoadCommands()
 		{
 			StopStartCommand = new CustomCommand(StopStartRotation);
-			BackImageCommand = new CustomCommand(BackImageMove, CanBackImageMove);
-			NextImageCommand = new CustomCommand(NextImageMove, CanNextImageMove);
+			BackImageCommand = new CustomCommand(BackImageMove);
+			NextImageCommand = new CustomCommand(NextImageMove);
 			SetTimeBetweenPicturesCommand = new CustomCommand(SetTimeBetweenPictures);
 			SetSelectedStrechModeCommand = new CustomCommand(SetSelectedStrechMode);
 		}
@@ -179,18 +179,27 @@ namespace RotatePictures.ViewModel
 
 		private void StopStartRotation(object obj) => RotationRunning = !RotationRunning;
 
-		private bool CanBackImageMove(object obj) => !RotationRunning;
+		public void BackImageMove(object obj)
+		{
+			CurrentPicture = SelectionTracker.Inst.Prev();
 
-		private void BackImageMove(object obj) => CurrentPicture = SelectionTracker.Inst.Prev();
+			if (!RotationRunning) return;
 
-		private bool CanNextImageMove(object obj) => !RotationRunning;
+			_tmr.Stop();
+			_tmr.Start();
+		}
 
-		private void NextImageMove(object obj)
+		public void NextImageMove(object obj)
 		{
 			if (SelectionTracker.Inst.AtTail)
 				RetrieveNextPicture();
 			else
 				CurrentPicture = SelectionTracker.Inst.Next();
+
+			if (!RotationRunning) return;
+
+			_tmr.Stop();
+			_tmr.Start();
 		}
 
 		private void SetTimeBetweenPictures(object obj)

@@ -3,7 +3,7 @@ using System.Windows;
 using RotatePictures.ViewModel;
 
 
-namespace RotatePictures
+namespace RotatePictures.View
 {
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
@@ -22,5 +22,9 @@ namespace RotatePictures
 			//Log.Info(string.Empty);
 			//Log.Info(string.Empty);
 		}
+
+		private void BackImageMove(object sender, System.Windows.Input.ExecutedRoutedEventArgs e) => (DataContext as MainWindowViewModel)?.BackImageMove(e);
+
+		private void NextImageMove(object sender, System.Windows.Input.ExecutedRoutedEventArgs e) => (DataContext as MainWindowViewModel)?.NextImageMove(e);
 	}
 }

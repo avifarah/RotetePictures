@@ -7,12 +7,11 @@
 		xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
 		x:Class="RotatePictures.View.StretchModeView"
 		mc:Ignorable="d"
-		WindowStyle="ToolWindow"
-		WindowStartupLocation="CenterOwner"
+		WindowStyle="None"
 		Title="Picture Stretch Mode"
 		Height="200"
 		Width="165"
-	>
+>
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition/>
@@ -21,10 +20,10 @@
 			<RowDefinition/>
 			<RowDefinition/>
 		</Grid.RowDefinitions>
-		<RadioButton Content="Fill" HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch" Margin="5" VerticalAlignment="Top" IsChecked="{Binding FillRb, Mode=TwoWay}" GroupName="PictureStretch"/>
-		<RadioButton Content="None" HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch" Margin="5" VerticalAlignment="Top" IsChecked="{Binding NoneRb, Mode=TwoWay}" Grid.Row="1" GroupName="PictureStretch"/>
-		<RadioButton Content="Uniform" HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch" Margin="5" VerticalAlignment="Top" IsChecked="{Binding UniformRb, Mode=TwoWay}" Grid.Row="2" GroupName="PictureStretch"/>
-		<RadioButton Content="UniformToFill" HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch" Margin="5" VerticalAlignment="Top" IsChecked="{Binding UniformToFillRb, Mode=TwoWay}" Grid.Row="3" GroupName="PictureStretch"/>
+		<RadioButton Content="Fill" HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch" Margin="5" VerticalAlignment="Top" IsChecked="{Binding FillRb, Mode=TwoWay}" GroupName="PictureStretch" ToolTip="Hight and width are stretched independently to fit the window"/>
+		<RadioButton Content="None" HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch" Margin="5" VerticalAlignment="Top" IsChecked="{Binding NoneRb, Mode=TwoWay}" Grid.Row="1" GroupName="PictureStretch" ToolTip="Neither height nor width are changed from their original legths"/>
+		<RadioButton Content="Uniform" HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch" Margin="5" VerticalAlignment="Top" IsChecked="{Binding UniformRb, Mode=TwoWay}" Grid.Row="2" GroupName="PictureStretch" ToolTip="Picture is stretched uniformly until height or width reaches window's border"/>
+		<RadioButton Content="UniformToFill" HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch" Margin="5" VerticalAlignment="Top" IsChecked="{Binding UniformToFillRb, Mode=TwoWay}" Grid.Row="3" GroupName="PictureStretch" ToolTip="Picture is stretched uniformly passed height or width reaches window's border and until the second, width or height, reaches window's border"/>
 		<StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
 			<Button Content="Cancel" Margin="5" VerticalAlignment="Stretch" Width="60">
 				<i:Interaction.Triggers>
