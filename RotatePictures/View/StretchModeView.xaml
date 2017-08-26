@@ -1,0 +1,45 @@
+﻿<Window
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:local="clr-namespace:RotatePictures.View"
+		xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+		x:Class="RotatePictures.View.StretchModeView"
+		mc:Ignorable="d"
+		WindowStyle="ToolWindow"
+		WindowStartupLocation="CenterOwner"
+		Title="Picture Stretch Mode"
+		Height="200"
+		Width="165"
+	>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
+			<RowDefinition/>
+		</Grid.RowDefinitions>
+		<RadioButton Content="Fill" HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch" Margin="5" VerticalAlignment="Top" IsChecked="{Binding FillRb, Mode=TwoWay}" GroupName="PictureStretch"/>
+		<RadioButton Content="None" HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch" Margin="5" VerticalAlignment="Top" IsChecked="{Binding NoneRb, Mode=TwoWay}" Grid.Row="1" GroupName="PictureStretch"/>
+		<RadioButton Content="Uniform" HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch" Margin="5" VerticalAlignment="Top" IsChecked="{Binding UniformRb, Mode=TwoWay}" Grid.Row="2" GroupName="PictureStretch"/>
+		<RadioButton Content="UniformToFill" HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch" Margin="5" VerticalAlignment="Top" IsChecked="{Binding UniformToFillRb, Mode=TwoWay}" Grid.Row="3" GroupName="PictureStretch"/>
+		<StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
+			<Button Content="Cancel" Margin="5" VerticalAlignment="Stretch" Width="60">
+				<i:Interaction.Triggers>
+					<i:EventTrigger EventName="Click">
+						<i:InvokeCommandAction Command="{Binding CancelCommand}"/>
+					</i:EventTrigger>
+				</i:Interaction.Triggers>
+			</Button>
+			<Button Content="OK" Margin="5" VerticalAlignment="Stretch" Width="60">
+				<i:Interaction.Triggers>
+					<i:EventTrigger EventName="Click">
+						<i:InvokeCommandAction Command="{Binding SetStretchMode}"/>
+					</i:EventTrigger>
+				</i:Interaction.Triggers>
+			</Button>
+		</StackPanel>
+	</Grid>
+</Window>
