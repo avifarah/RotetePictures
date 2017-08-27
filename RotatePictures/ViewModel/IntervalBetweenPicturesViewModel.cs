@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using RotatePictures.Annotations;
@@ -9,7 +8,7 @@ using RotatePictures.Utilities;
 
 namespace RotatePictures.ViewModel
 {
-	public class IntervalBetweenPicturesViewModel : INotifyPropertyChanged
+	public sealed class IntervalBetweenPicturesViewModel : INotifyPropertyChanged
 	{
 		public IntervalBetweenPicturesViewModel()
 		{
@@ -31,15 +30,9 @@ namespace RotatePictures.ViewModel
 
 		#region RegisterMessages
 
-		private void RegisterMessages()
-		{
-			Messenger.DefaultMessenger.Register<SelectedIntervalMessage>(this, OnSelectedIntervalBetweenPictures);
-		}
+		private void RegisterMessages() => Messenger.DefaultMessenger.Register<SelectedIntervalMessage>(this, OnSelectedIntervalBetweenPictures);
 
-		private void OnSelectedIntervalBetweenPictures(SelectedIntervalMessage selectedInterval)
-		{
-			SetIntervalBetweenPictures = selectedInterval.SelectedInterval;
-		}
+		private void OnSelectedIntervalBetweenPictures(SelectedIntervalMessage selectedInterval) => SetIntervalBetweenPictures = selectedInterval.SelectedInterval;
 
 		#endregion
 
@@ -55,10 +48,7 @@ namespace RotatePictures.ViewModel
 
 		public ICommand OkCommand { get; set; }
 
-		private void CancelAct(object obj)
-		{
-			Messenger.DefaultMessenger.Send(new CloseIntervalBetweenPictureMessage(), 3);
-		}
+		private void CancelAct(object obj) => Messenger.DefaultMessenger.Send(new CloseIntervalBetweenPictureMessage(), 3);
 
 		private void OkAct(object obj)
 		{
@@ -73,7 +63,7 @@ namespace RotatePictures.ViewModel
 		public event PropertyChangedEventHandler PropertyChanged;
 
 		[NotifyPropertyChangedInvocator]
-		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		private void OnPropertyChanged([CallerMemberName] string propertyName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
 		#endregion
 	}

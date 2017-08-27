@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using System.Linq;
 using RotatePictures.Utilities;
 
 
@@ -43,17 +44,92 @@ namespace UnitTestProject1
 		public void ExtensionsToConsiderTest()
 		{
 			// Arrange
-			List<string> exts;
+			List<string> actual;
 			//<add key = "File extentions to consider" value=".jpg;.png;.bmp;.avi;.jpeg;.Peggy;.Ben"/>
 			var expected = new List<string> { ".jpg", ".png", ".bmp", ".avi", ".jpeg", ".Peggy", ".Ben" };
 
 			// Act
-			exts = ConfigValue.Inst.FileExtensionsToConsider();
+			actual = ConfigValue.Inst.FileExtensionsToConsider();
 
 			// Assert
-			Assert.AreEqual(expected.Count, exts.Count);
-			for (var i = 0; i < exts.Count; ++i)
-				Assert.AreEqual(expected[i], exts[i]);
+			Assert.AreEqual(expected.Count, actual.Count);
+			for (var i = 0; i < actual.Count; ++i)
+				Assert.AreEqual(expected[i], actual[i]);
+		}
+
+		[TestMethod]
+		public void ExtensionsToConder2Test()
+		{
+			// Arrange
+			ConfigValue.Inst.SetStillExtension("Abc;Def;Ghi");
+			ConfigValue.Inst.SetMotionExtension("Jkl;Mno");
+			var expected = new List<string> { "Abc", "Def", "Ghi", "Jkl", "Mno" };
+
+			// Act
+			var actual = ConfigValue.Inst.FileExtensionsToConsider();
+
+			// Assert
+			Assert.AreEqual(expected.Count, actual.Count);
+			for (var i = 0; i < actual.Count; ++i)
+				Assert.AreEqual(expected[i], actual[i]);
+		}
+
+		[TestMethod]
+		public void ExtenstionsToConsider3Test()
+		{
+			// Arrange
+			ConfigValue.Inst.SetStillExtension("Abc;Def;Ghi");
+			var expected = new List<string> { "Abc", "Def", "Ghi" };
+			expected.AddRange(".avi;.jpeg;.Peggy;.Ben".Split(new [] { ';' }).ToList());
+
+			// Act
+			var actual = ConfigValue.Inst.FileExtensionsToConsider();
+
+			// Assert
+			Assert.AreEqual(expected.Count, actual.Count);
+			for (var i = 0; i < actual.Count; ++i)
+				Assert.AreEqual(expected[i], actual[i]);
+		}
+
+		[TestMethod]
+		public void ExtenstionsToConsider4Test()
+		{
+			// Arrange
+			ConfigValue.Inst.SetMotionExtension("Abc;Def;Ghi");
+			var expected = ".jpg;.png;.bmp".Split(new [] { ';' }).ToList();
+			expected.AddRange("Abc;Def;Ghi".Split(new[] { ';' }).ToList());
+
+			// Act
+			var actual = ConfigValue.Inst.FileExtensionsToConsider();
+
+			// Assert
+			Assert.AreEqual(expected.Count, actual.Count);
+			for (var i = 0; i < actual.Count; ++i)
+				Assert.AreEqual(expected[i], actual[i]);
+		}
+
+		[TestMethod]
+		public void RestoreStillExtensionsTest()
+		{
+			var expected = new List<string> { ".jpg", ".bmp", ".gif", ".png", ".psd", ".tif" };
+
+			var actual = ConfigValue.Inst.RestoreStillExtensions.Split(new[] { ';' }).ToList();
+
+			Assert.AreEqual(expected.Count, actual.Count);
+			for (int i = 0; i < actual.Count; ++i)
+				Assert.AreEqual(expected[i], actual[i]);
+		}
+
+		[TestMethod]
+		public void RestoreMotionExtensionsTest()
+		{
+			var expected = new List<string> { ".mov", ".avi", ".mpg", ".mod", ".mp4", ".wmv", ".3gp" };
+
+			var actual = ConfigValue.Inst.RestoreMotionExtensions.Split(new [] { ';' }).ToList();
+
+			Assert.AreEqual(expected.Count, actual.Count);
+			for (int i = 0; i < actual.Count; ++i)
+				Assert.AreEqual(expected[i], actual[i]);
 		}
 
 		[TestMethod]
@@ -69,6 +145,22 @@ namespace UnitTestProject1
 
 			// Assert
 			Assert.AreEqual(expected, actual);
+		}
+
+		[TestMethod]
+		public void SetInitialPictureDirectoriesTest()
+		{
+			// Arrange
+			var expected = new string[] {"Abc", "Def"};
+			ConfigValue.Inst.SetInitialPictureDirectories("Abc;Def");
+			
+			// Act
+			var actual = ConfigValue.Inst.InitialPictureDirectories();
+
+			// Assert
+			Assert.AreEqual(expected.Length, actual.Length);
+			for (int i = 0; i < actual.Length; ++i)
+				Assert.AreEqual(expected[i], actual[i]);
 		}
 	}
 }

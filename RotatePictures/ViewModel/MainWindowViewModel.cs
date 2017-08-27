@@ -22,6 +22,7 @@ namespace RotatePictures.ViewModel
 
 		private readonly StretchDialogService _strechSvc;
 		private readonly IntervalBetweenPicturesDialogService _intervalBetweenPicturesService;
+		private readonly FileTypeToRotateService _pictureMetadataService;
 
 		public MainWindowViewModel()
 		{
@@ -29,6 +30,7 @@ namespace RotatePictures.ViewModel
 
 			_strechSvc = new StretchDialogService();
 			_intervalBetweenPicturesService = new IntervalBetweenPicturesDialogService();
+			_pictureMetadataService = new FileTypeToRotateService();
 
 			_pic = ConfigValue.Inst.FirstPictureToDisplay();
 			_imgStretch = ConfigValue.Inst.ImageStretch();
@@ -128,12 +130,11 @@ namespace RotatePictures.ViewModel
 			Messenger.DefaultMessenger.Register<SetStretchModeMessage>(this, OnSetStretchMode, 1);
 			Messenger.DefaultMessenger.Register<SetIntervalMessage>(this, OnSetIntervalBetweenPictures, 2);
 			Messenger.DefaultMessenger.Register<CloseIntervalBetweenPictureMessage>(this, OnCloseIntervalBetweenPictures, 3);
+			Messenger.DefaultMessenger.Register<CancelFileTypesMessage>(this, OnCancelFileTypes, 4);
+			Messenger.DefaultMessenger.Register<SelectedMetadataMessage>(this, OnSetMetadataAction, 5);
 		}
 
-		private void OnCloseIntervalBetweenPictures(CloseIntervalBetweenPictureMessage obj)
-		{
-			_intervalBetweenPicturesService.CloseDetailDialog();
-		}
+		private void OnCloseIntervalBetweenPictures(CloseIntervalBetweenPictureMessage obj) => _intervalBetweenPicturesService.CloseDetailDialog();
 
 		private void OnSetIntervalBetweenPictures(SetIntervalMessage intervalMsg)
 		{
@@ -154,6 +155,44 @@ namespace RotatePictures.ViewModel
 			UpdateConfigFile.Inst.UpdateConfig(key, ImageStretch);
 		}
 
+		private void OnCancelFileTypes(CancelFileTypesMessage obj) => _pictureMetadataService.CloseDetailDialog();
+
+		private void OnSetMetadataAction(SelectedMetadataMessage metadata)
+		{
+			const string pictureFolderKey = "Initial Folders";
+			var pictureFolder = metadata.PictureFlder;
+			if (!string.IsNullOrWhiteSpace(pictureFolder))
+			{
+				UpdateConfigFile.Inst.UpdateConfig(pictureFolderKey, pictureFolder);
+				ConfigValue.Inst.SetInitialPictureDirectories(pictureFolder);
+			}
+
+			const string firstPictureKey = "First picture to display";
+			var firstPicture = metadata.FirstPictureToDisplay;
+			if (!string.IsNullOrWhiteSpace(firstPicture))
+				UpdateConfigFile.Inst.UpdateConfig(firstPictureKey, firstPicture);
+
+			const string stillExtKey = "Still pictures";
+			var stillExt = metadata.StillPictureExtensions;
+			if (!string.IsNullOrWhiteSpace(stillExt))
+				UpdateConfigFile.Inst.UpdateConfig(stillExtKey, stillExt);
+
+			const string motionExtKey = "Motion pictures";
+			var motionExt = metadata.MotionPictureExtensions;
+			if (!string.IsNullOrWhiteSpace(motionExt))
+				UpdateConfigFile.Inst.UpdateConfig(motionExtKey, motionExt);
+
+			// Restart the system
+			ResetPictures();
+		}
+
+		private void ResetPictures()
+		{
+			_tmr.Stop();
+			_model.Restart();
+			_tmr.Start();
+		}
+
 		#endregion
 
 		#region Command
@@ -165,6 +204,7 @@ namespace RotatePictures.ViewModel
 			NextImageCommand = new CustomCommand(NextImageMove);
 			SetTimeBetweenPicturesCommand = new CustomCommand(SetTimeBetweenPictures);
 			SetSelectedStrechModeCommand = new CustomCommand(SetSelectedStrechMode);
+			SetPicturesMetaDataCommand = new CustomCommand(SetPicturesMetaData);
 		}
 
 		public ICommand StopStartCommand { get; set; }
@@ -176,6 +216,8 @@ namespace RotatePictures.ViewModel
 		public ICommand SetTimeBetweenPicturesCommand { get; set; }
 
 		public ICommand SetSelectedStrechModeCommand { get; set; } 
+
+		public ICommand SetPicturesMetaDataCommand { get; set; }
 
 		private void StopStartRotation(object obj) => RotationRunning = !RotationRunning;
 
@@ -202,15 +244,27 @@ namespace RotatePictures.ViewModel
 			_tmr.Start();
 		}
 
-		private void SetTimeBetweenPictures(object obj)
-		{
-			_intervalBetweenPicturesService.ShowDetailDialog(IntervalBetweenPictures);
-		}
+		private void SetTimeBetweenPictures(object obj) => _intervalBetweenPicturesService.ShowDetailDialog(IntervalBetweenPictures);
 
 		private void SetSelectedStrechMode(object obj)
 		{
 			var mode = ImageStretch.TextToMode();
 			_strechSvc.ShowDetailDialog(mode);
+		}
+
+		private void SetPicturesMetaData(object obj)
+		{
+			var picFolder = string.Join(";", ConfigValue.Inst.InitialPictureDirectories());
+			var firstPicture = ConfigValue.Inst.FirstPictureToDisplay();
+			var stillExtentions = string.Join(";", ConfigValue.Inst.StillPictureExtensions());
+			var motionExtentions = string.Join(";", ConfigValue.Inst.MotionPictures());
+			var _metaData = new PictureMetaDataTransmission {
+				PictureFolder = picFolder,
+				FirstPictureToDisplay = firstPicture,
+				StillPictureExtensions = stillExtentions,
+				MotionPictureExtensions = motionExtentions
+			};
+			_pictureMetadataService.ShowDetailDialog(_metaData);
 		}
 
 		#endregion

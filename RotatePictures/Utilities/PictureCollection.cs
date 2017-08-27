@@ -5,7 +5,7 @@ namespace RotatePictures.Utilities
 {
 	public class PictureCollection : IList<string>
 	{
-		private readonly SynchronizedCollection<string> _picCollection = new SynchronizedCollection<string>();
+		private SynchronizedCollection<string> _picCollection = new SynchronizedCollection<string>();
 
 		public string this[int index]
 		{
@@ -19,7 +19,7 @@ namespace RotatePictures.Utilities
 
 		public void Add(string item) => _picCollection.Add(item);
 
-		public void Clear() => _picCollection.Clear();
+		public void Clear() => _picCollection = new SynchronizedCollection<string>();
 
 		public bool Contains(string item) => _picCollection.Contains(item);
 

@@ -70,15 +70,19 @@
     <Compile Include="Converters\IsMotionPictureConverter.cs" />
     <Compile Include="Converters\IsStillPictureConverter.cs" />
     <Compile Include="Converters\StartStopRotateConverter.cs" />
+    <Compile Include="InnerVmCommunication\CancelFileTypesMessage.cs" />
     <Compile Include="InnerVmCommunication\CloseIntervalBetweenPictureMessage.cs" />
     <Compile Include="InnerVmCommunication\CloseStretchModeMessage.cs" />
     <Compile Include="InnerVmCommunication\SelectedIntervalMessage.cs" />
+    <Compile Include="InnerVmCommunication\SelectedMetadataMessage.cs" />
     <Compile Include="InnerVmCommunication\SetIntervalMessage.cs" />
     <Compile Include="InnerVmCommunication\SetStretchModeMessage.cs" />
     <Compile Include="InnerVmCommunication\SelectedStretchModeMessage.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Services\DialogService.cs" />
+    <Compile Include="Services\FileTypeToRotateService.cs" />
     <Compile Include="Services\IntervalBetweenPicturesDialogService.cs" />
+    <Compile Include="Services\PictureMetaDataTransmission.cs" />
     <Compile Include="Services\StretchDialogService.cs" />
     <Compile Include="Utilities\ConfigValue.cs" />
     <Compile Include="Model\PictureModel.cs" />
@@ -92,15 +96,23 @@
     <Compile Include="Utilities\StretchModeUtil.cs" />
     <Compile Include="Utilities\StringUtil.cs" />
     <Compile Include="Utilities\UpdateConfigFile.cs" />
+    <Compile Include="ViewModel\FileTypesToRotateViewModel.cs" />
     <Compile Include="ViewModel\IntervalBetweenPicturesViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\StretchModeViewModel.cs" />
+    <Compile Include="View\FileTypesToRotate.xaml.cs">
+      <DependentUpon>FileTypesToRotate.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\IntervalBetweenPicturesView.xaml.cs">
       <DependentUpon>IntervalBetweenPicturesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\StretchModeView.xaml.cs">
       <DependentUpon>StretchModeView.xaml</DependentUpon>
     </Compile>
+    <Page Include="View\FileTypesToRotate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\IntervalBetweenPicturesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

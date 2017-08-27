@@ -28,10 +28,11 @@
 	<DockPanel>
 		<Menu DockPanel.Dock="Top">
 			<MenuItem Header="_Tools">
-				<MenuItem Header="_Time between pictures" Command="{Binding SetTimeBetweenPicturesCommand}"/>
+				<MenuItem Header="_Time between pictures..." Command="{Binding SetTimeBetweenPicturesCommand}" />
+				<MenuItem Header="_Pictures meta data..." Command="{Binding SetPicturesMetaDataCommand}"/>
 			</MenuItem>
 			<MenuItem Header="_Picture">
-				<MenuItem Header="_Stretch Mode" Command="{Binding SetSelectedStrechModeCommand}" />
+				<MenuItem Header="_Stretch Mode..." Command="{Binding SetSelectedStrechModeCommand}" />
 			</MenuItem>
 		</Menu>
 		<Grid>

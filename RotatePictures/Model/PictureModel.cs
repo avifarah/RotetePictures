@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using RotatePictures.Utilities;
 
@@ -13,17 +14,36 @@ namespace RotatePictures.Model
 		private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
 		private readonly PictureCollection _picCollection = new PictureCollection();
-		private readonly List<string> _extions;
+		private List<string> _extions;
 		private readonly Random _rand = new Random();
+		private Task _taskModel;
+		private CancellationTokenSource _cts;
 
 		/// <summary>
 		/// .ctor
 		/// Retrieve pictures asynchrounously
 		/// </summary>
-		public PictureModel()
+		public PictureModel() => Restart();
+
+		public void Restart()
 		{
+			if (_taskModel != null)
+			{
+				_cts.Cancel();
+				try
+				{
+					_taskModel.ContinueWith(a => { }).Wait();
+					_cts.Dispose();
+				}
+				catch (AggregateException ae) { Log.Error($"Message: {ae.Flatten()}", ae); }
+				catch (Exception e) { Log.Error($"Message: {e.Message}", e); }
+			}
+
+			// I have decided not to clear out the SelectionTracker.  The system will still remember old selections
+			_picCollection.Clear();
 			_extions = ConfigValue.Inst.FileExtensionsToConsider();
-			Task.Run(() => RetrievePictures());
+			_cts = new CancellationTokenSource();
+			_taskModel = Task.Run(() => RetrievePictures(), _cts.Token);
 		}
 
 		/// <summary>
@@ -36,8 +56,7 @@ namespace RotatePictures.Model
 			if (cnt == 0)
 			{
 				var pic1 = ConfigValue.Inst.FirstPictureToDisplay();
-				if (string.IsNullOrWhiteSpace(pic1)) return null;
-				return pic1;
+				return string.IsNullOrWhiteSpace(pic1) ? null : pic1;
 			}
 
 			var index = _rand.Next(cnt);
